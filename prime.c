@@ -8,13 +8,15 @@ void pause();
 void draw_circle(SDL_Renderer* renderer, SDL_Point center, int radius, SDL_Color color);
 void draw_point_on_circle(SDL_Renderer* renderer, SDL_Point center, double radian, int radius, SDL_Color color);
 int check_prime(int a);
-void draw_n_primes(SDL_Renderer* renderer,  SDL_Point center, int radius, int number_of_primes);
+void draw_n_primes(SDL_Renderer* renderer,  SDL_Point center, int radius, int number_of_primes, int * existing_primes);
+
+#define NB_PRIME 500
+static int prime_numbers[NB_PRIME] = {0};
 
 int main(int argc, char *argv[])
 {
     SDL_Window *window;
     SDL_Renderer* renderer;
-    
 
     SDL_Point window_position = {         
         SDL_WINDOWPOS_CENTERED,
@@ -30,7 +32,6 @@ int main(int argc, char *argv[])
    
 
     SDL_Init(SDL_INIT_VIDEO);             
-
 
     window = SDL_CreateWindow( 
         "Primes on a circle",               
@@ -49,8 +50,8 @@ int main(int argc, char *argv[])
 
     renderer = SDL_CreateRenderer(window, -1, 0);
 
-    for (int y = 2; y <= 600; y = y+1) {       
-        draw_n_primes(renderer, center, y, y+1000);
+    for (int y = 0; y <= NB_PRIME; y++) {       
+        draw_n_primes(renderer, center, y, y, prime_numbers);
     }
 
     SDL_RenderPresent(renderer);
@@ -65,31 +66,45 @@ int main(int argc, char *argv[])
     return 0; 
 }
 
-void draw_n_primes(SDL_Renderer* renderer,  SDL_Point center, int radius, int number_of_primes)
+void draw_n_primes(SDL_Renderer* renderer,  SDL_Point center, int radius, int number_of_primes, int * existing_primes)
 {
     double le_point = 0.0;
     SDL_Color red = {255, 66, 55};
+    int computed_primes = 0;
+    int checked_number = 0;
 
-    for (int i = 0; i <= number_of_primes; i++) {
-        if (check_prime(i)) {
-            le_point = (i*2*M_PI)/number_of_primes;
-            SDL_Color red = {radius*255/600, 0, radius*55/600};
-            draw_point_on_circle(renderer, center, le_point, radius, red);
+    while (computed_primes < number_of_primes) {
+        if (existing_primes[computed_primes] == checked_number) {
+            checked_number++;
+            computed_primes++;
+            continue;
         }
+
+        if (check_prime(checked_number) == 1) {
+            le_point = (checked_number*2*M_PI)/number_of_primes;
+            SDL_Color red = {255, 0, 55};
+            draw_point_on_circle(renderer, center, le_point, radius, red);
+            existing_primes[computed_primes] = checked_number;
+            computed_primes++;
+        }
+        checked_number++;
     }
 }
 
 int check_prime(int a)
 {
-   int c;
-   
-   for ( c = 2 ; c <= a - 1 ; c++ )
+    int c;   
+ 
+   for (c = 2 ; c < a ; c++)
    {
-      if ( a%c == 0 )
-     return 0;
+      if ( a%c == 0 ) {
+        return 0;
+      }
    }
-   if ( c == a )
-      return 1;
+
+   if ( c == a ) {
+        return 1;
+   }      
 }
 
 void draw_circle(SDL_Renderer* renderer, SDL_Point center, int radius, SDL_Color color)
