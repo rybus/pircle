@@ -1,19 +1,20 @@
 CPP=gcc 
-CFLAGS=-O3 
+CFLAGS=-O3 -g
 
 SDL_CFLAGS := $(shell sdl2-config --cflags)
 SDL_LDFLAGS := $(shell sdl2-config --libs)
 LIBS += -lm
-
-EXEC=prime
+SRC= $(wildcard *.c)
+OBJ= $(SRC:.c=.o)
+EXEC=main
 
 all: ${EXEC}
 
-${EXEC}: ${EXEC}.o
-	${CPP} $(CFLAGS) -o ${EXEC} ${EXEC}.o ${SDL_LDFLAGS} ${LIBS}
+main: $(OBJ)
+	$(CPP) $(CFLAGS) -o $@ $^ $(LDFLAGS) ${SDL_LDFLAGS} ${LIBS}
 
-${EXEC}.o: ${EXEC}.c
-	${CPP} $(CFLAGS) -o ${EXEC}.o -c ${EXEC}.c ${SDL_CFLAGS} 
+%.o: %.c
+	$(CPP)$(CFLAGS) -o $@ -c $< $(CFLAGS) ${SDL_CFLAGS} 
 
 clean:	
 	rm -fr *.o
