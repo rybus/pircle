@@ -11,7 +11,7 @@ int check_prime(int a);
 void draw_n_primes(SDL_Renderer* renderer,  SDL_Point center, int radius, int number_of_primes, int * existing_primes);
 int check_if_divided_by(int a, int multiply);
 
-#define NB_PRIME 10000
+#define NB_PRIME 1000
 static int prime_numbers[NB_PRIME] = {0};
 
 int main(int argc, char *argv[])
@@ -93,9 +93,7 @@ void draw_n_primes(SDL_Renderer* renderer,  SDL_Point center, int radius, int nu
         }
 
         if (check_prime(checked_number) == 1) {
-            SDL_Log("prime number %d",  //    Print mouse position
-                checked_number
-            );
+             printf("drawing prime:  %d (r: %d, angle: %fl)\n", checked_number, radius, le_point);
             SDL_Color red = {255, 0, 55};
             draw_point_on_circle(renderer, center, le_point, radius, red);
             existing_primes[computed_primes] = checked_number;
