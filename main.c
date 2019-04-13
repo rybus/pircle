@@ -5,16 +5,41 @@
 #include "store.h"
 
 void pause();
+int display(int number_of_primes, double expension_factor);
 
 #define WINDOW_LENGTH 1000
 
 int main(int argc, char *argv[])
 {
+    char *param_generate = "generate";
+    double expension_factor;
+    int number_of_primes = 0;
+
+    if (argc == 3)
+    {
+        if (strcmp(argv[1], param_generate) == 0)
+        {
+            sscanf(argv[2], "%d", &number_of_primes);
+            return generate(number_of_primes);
+        }
+        else
+        {
+            sscanf(argv[1], "%d", &number_of_primes);
+            sscanf(argv[2], "%lf", &expension_factor);
+
+            return display(number_of_primes, expension_factor);
+        }
+    }
+
+    printf("no enough argument provided\n");
+
+    return 0;
+}
+
+int display(int number_of_primes, double expension_factor)
+{
     SDL_Window *window;
     SDL_Renderer *renderer;
-    double a;
-    int number_of_prime_to_display = 0;
-    prime * last_prime = NULL;
 
     SDL_Point window_position = {
         SDL_WINDOWPOS_CENTERED,
@@ -25,19 +50,9 @@ int main(int argc, char *argv[])
 
     SDL_Point window_size = {WINDOW_LENGTH, WINDOW_LENGTH};
     SDL_Color blue = {0, 120, 199};
+    prime *last_prime = malloc(sizeof(prime));
 
     SDL_Init(SDL_INIT_VIDEO);
-
-    if (argc == 3)
-    {
-        sscanf(argv[1], "%d", &number_of_prime_to_display);
-        sscanf(argv[2], "%lf", &a);
-    }
-    else
-    {
-        return 0;
-    }
-
     window = SDL_CreateWindow(
         "Primes on a circle",
         window_position.x,
@@ -54,14 +69,15 @@ int main(int argc, char *argv[])
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    for (int y = 1; y < number_of_prime_to_display; y++)
+    last_prime->number = -1;
+    last_prime->next = NULL;
+
+    for (int y = 0; y < number_of_primes && last_prime != NULL; y++)
     {
-        if (last_prime != NULL || y == 1) {
-            last_prime = draw_n_primes(renderer, center, last_prime, y, y);
-        }
+        last_prime = draw_n_primes(renderer, center, last_prime, y, y + 20);
     }
 
-    draw_logarithm(renderer, center, a, number_of_prime_to_display);
+    draw_logarithm(renderer, center, expension_factor, number_of_primes);
 
     SDL_RenderPresent(renderer);
 
@@ -70,6 +86,7 @@ int main(int argc, char *argv[])
     SDL_DestroyWindow(window);
 
     SDL_Quit();
+
     return 0;
 }
 

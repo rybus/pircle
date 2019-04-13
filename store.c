@@ -1,12 +1,21 @@
 #include <stdio.h>
 #include "store.h"
 
-void store(int prime)
+int generate(int number_of_prime)
 {
-    char buffer[8];
-    FILE *fp = fopen("primes.txt", "a");
-    fprintf(fp, "%d\n", prime);
-    fclose(fp);
+    int generated_primes = 0;
+    int i = 0;
+
+    while (number_of_prime > generated_primes)
+    {
+        if (is_prime(i)) {
+            printf("%d\n", i);
+            generated_primes++;
+        }
+        i++;
+    }
+
+    return 0;
 }
 
 llist get_n_primes(int number_of_primes)
@@ -20,7 +29,7 @@ llist get_n_primes(int number_of_primes)
 
     if (!feof(fp))
     {
-        while (fgets(buffer, 8, fp) != NULL && number_of_primes >= number_of_read_primes)
+        while (fgets(buffer, 8, fp) != NULL &&  number_of_read_primes <= number_of_primes)
         {
             sscanf(buffer, "%d\n", &read_prime);
             prime_list = add_number_to_list(prime_list, read_prime);
@@ -29,25 +38,11 @@ llist get_n_primes(int number_of_primes)
         fclose(fp);
     }
 
-    while (number_of_primes >= number_of_read_primes)
-    {
-        read_prime = get_next_prime(read_prime);
-        store(read_prime);
-        prime_list = add_number_to_list(prime_list, read_prime);
-        number_of_read_primes++;
+    if(number_of_primes > number_of_read_primes) {
+        return NULL;
     }
+   
     return prime_list;
-}
-
-int get_next_prime(int prime)
-{
-    prime++;
-    while (is_prime(prime) != 1)
-    {
-        prime++;
-    }
-
-    return prime;
 }
 
 llist add_number_to_list(llist liste_of_primes, int prime_number)
