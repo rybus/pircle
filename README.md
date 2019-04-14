@@ -25,7 +25,7 @@ make
 
 - `X` is the number of primes you want to display
 - `Y` is the expension factor for the spiral (use 1)
-- the file  [primes.txt!](primes.txt) contains the list of primes number
+- the file `primes.txt` contains the list of the first million of prime numbers
 
 ## Generate prime numbers
 
