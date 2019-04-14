@@ -20,16 +20,16 @@ int generate(int number_of_prime)
 
 llist get_n_primes(int number_of_primes)
 {
-    char buffer[8];
+    char buffer[10];
     int read_prime = 1;
-    int number_of_read_primes = 1;
+    int number_of_read_primes = 0;
     llist prime_list = NULL;
 
     FILE *fp = fopen("primes.txt", "r");
 
     if (!feof(fp))
     {
-        while (fgets(buffer, 8, fp) != NULL &&  number_of_read_primes <= number_of_primes)
+        while (fgets(buffer, 10, fp) != NULL &&  number_of_read_primes <= number_of_primes)
         {
             sscanf(buffer, "%d\n", &read_prime);
             prime_list = add_number_to_list(prime_list, read_prime);
@@ -39,6 +39,8 @@ llist get_n_primes(int number_of_primes)
     }
 
     if(number_of_primes > number_of_read_primes) {
+        printf("not enough primes in the file, %d required, %d in the file\n", number_of_primes, number_of_read_primes);
+
         return NULL;
     }
    

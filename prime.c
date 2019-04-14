@@ -21,13 +21,11 @@ void draw_logarithm(SDL_Renderer *renderer, SDL_Point center, double a, int expe
 
 int draw_n_primes(SDL_Renderer *renderer, SDL_Point center, int window_length, int expected_number_of_primes)
 {
-    SDL_Color grey = {100, 100, 100};
     SDL_Color red = {255, 0, 55};
-    SDL_Color green = {0, 255, 0};
-    SDL_Color blue = {0, 0, 255};
-
     double angle;
+    double radius;
     int displayed_prime = 0;
+    prime* next = NULL;
 
     llist prime_list = get_n_primes(expected_number_of_primes);
 
@@ -43,20 +41,23 @@ int draw_n_primes(SDL_Renderer *renderer, SDL_Point center, int window_length, i
     while (displayed_prime < expected_number_of_primes)
     {
         angle = (current_prime->number * 2 * M_PI) / (displayed_prime - 1);
+        radius = (displayed_prime*window_length)/expected_number_of_primes;
 
-        draw_point_on_circle(renderer, center, angle, displayed_prime/200, red);
+        draw_point_on_circle(renderer, center, angle, radius, red);
 
         displayed_prime++;
         if (displayed_prime < expected_number_of_primes)
-        {
-            current_prime = current_prime->next;
+        {   
+            next = current_prime->next;
+            free(current_prime);
+            current_prime = next;
         }
     }
 
     return 0;
 }
 
-void draw_point_on_circle(SDL_Renderer *renderer, SDL_Point center, double radian, int radius, SDL_Color color)
+void draw_point_on_circle(SDL_Renderer *renderer, SDL_Point center, double radian, double radius, SDL_Color color)
 {
     double x, y;
 
