@@ -19,74 +19,41 @@ void draw_logarithm(SDL_Renderer *renderer, SDL_Point center, double a, int expe
     }
 }
 
-prime *draw_n_primes(SDL_Renderer *renderer, SDL_Point center, prime *last_prime, int radius, int expected_number_of_primes)
+int draw_n_primes(SDL_Renderer *renderer, SDL_Point center, int window_length, int expected_number_of_primes)
 {
-    double angle;
     SDL_Color grey = {100, 100, 100};
     SDL_Color red = {255, 0, 55};
     SDL_Color green = {0, 255, 0};
     SDL_Color blue = {0, 0, 255};
-    int checked_number = 0;
+
+    double angle;
     int displayed_prime = 0;
-    int number_a_displayed = 0;
-    int number_b_displayed = 0;
-    int number_c_displayed = 0;
 
     llist prime_list = get_n_primes(expected_number_of_primes);
 
     if (prime_list == NULL)
     {
-        printf("not enough primes in files, %d required", expected_number_of_primes);
+        printf("not enough primes in the file, %d required", expected_number_of_primes);
 
-        return NULL;
+        return 1;
     }
 
     prime *current_prime = prime_list;
 
     while (displayed_prime < expected_number_of_primes)
     {
-        angle = (checked_number * 2 * M_PI) / expected_number_of_primes;
+        angle = (current_prime->number * 2 * M_PI) / (displayed_prime - 1);
 
-        if (checked_number == current_prime->number)
+        draw_point_on_circle(renderer, center, angle, displayed_prime/200, red);
+
+        displayed_prime++;
+        if (displayed_prime < expected_number_of_primes)
         {
-            if (checked_number == last_prime->number)
-            {
-                draw_point_on_circle(renderer, center, angle, radius, grey);
-            }
-            if (checked_number > last_prime->number || last_prime->number == -1)
-            {
-                draw_point_on_circle(renderer, center, angle, radius, red);
-            }
-
-            displayed_prime++;
-            if (displayed_prime < expected_number_of_primes)
-            {
-                current_prime = current_prime->next;
-            }
+            current_prime = current_prime->next;
         }
-
-        if (checked_number == 277 && number_a_displayed == 0)
-        {
-            draw_big_point_on_circle(renderer, center, angle, radius, green);
-            number_a_displayed = 1;
-        }
-
-        if (checked_number == 13 && number_b_displayed == 0)
-        {
-            draw_big_point_on_circle(renderer, center, angle, radius, green);
-            number_b_displayed = 1;
-        }
-
-        if (checked_number == 3601 && number_c_displayed == 0)
-        {
-            draw_big_point_on_circle(renderer, center, angle, radius, blue);
-            number_c_displayed = 1;
-        }
-
-        checked_number++;
     }
 
-    return current_prime;
+    return 0;
 }
 
 void draw_point_on_circle(SDL_Renderer *renderer, SDL_Point center, double radian, int radius, SDL_Color color)

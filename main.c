@@ -49,8 +49,6 @@ int display(int number_of_primes, double expension_factor)
         WINDOW_LENGTH / 2};
 
     SDL_Point window_size = {WINDOW_LENGTH, WINDOW_LENGTH};
-    SDL_Color blue = {0, 120, 199};
-    prime *last_prime = malloc(sizeof(prime));
 
     SDL_Init(SDL_INIT_VIDEO);
     window = SDL_CreateWindow(
@@ -69,13 +67,7 @@ int display(int number_of_primes, double expension_factor)
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    last_prime->number = -1;
-    last_prime->next = NULL;
-
-    for (int y = 1; y < number_of_primes && last_prime != NULL; y++)
-    {
-        last_prime = draw_n_primes(renderer, center, last_prime, y/2, y);
-    }
+    draw_n_primes(renderer, center, WINDOW_LENGTH, number_of_primes);
 
     //draw_logarithm(renderer, center, expension_factor, number_of_primes);
 
