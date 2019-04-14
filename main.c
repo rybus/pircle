@@ -72,12 +72,12 @@ int display(int number_of_primes, double expension_factor)
     last_prime->number = -1;
     last_prime->next = NULL;
 
-    for (int y = 0; y < number_of_primes && last_prime != NULL; y++)
+    for (int y = 1; y < number_of_primes && last_prime != NULL; y++)
     {
-        last_prime = draw_n_primes(renderer, center, last_prime, y, y + 20);
+        last_prime = draw_n_primes(renderer, center, last_prime, y/2, y);
     }
 
-    draw_logarithm(renderer, center, expension_factor, number_of_primes);
+    //draw_logarithm(renderer, center, expension_factor, number_of_primes);
 
     SDL_RenderPresent(renderer);
 
