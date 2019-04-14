@@ -18,6 +18,7 @@ Primes numbers are shown circularly with the following algorithm:
 ## Compile and execute
 
 ```
+sudo apt-get install libsdl2-dev
 git clone git@github.com:rybus/pircle.git
 make
 ./main X Y
